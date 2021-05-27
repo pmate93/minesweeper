@@ -279,6 +279,8 @@ $('document').ready(function(){
             $('.sign').after('<div class="message"></div>');
             $('.message').append('Ön nyert!');
             $('table').off();
+            $('.click').removeClass('imgH');
+            $('.click').addClass('imgNot');
         }
 
     
