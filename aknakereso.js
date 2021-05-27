@@ -278,6 +278,7 @@ $('document').ready(function(){
             $('.flex').addClass('green');
             $('.sign').after('<div class="message"></div>');
             $('.message').append('Ön nyert!');
+            $('table').off();
         }
 
     
