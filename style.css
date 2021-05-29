@@ -76,3 +76,26 @@ table, tr, td{
 .message{
     text-align: center;
 }
+
+input{
+    width: 40px;
+}
+
+.settings{
+    margin:20px;
+    text-align: right;
+    background-color: rgb(207, 203, 203);
+    padding: 20px;
+}
+
+input{
+    margin-top: 10px;
+}
+
+button{
+    margin-top: 10px;
+}
+
+.sign{
+    text-align: center;
+}

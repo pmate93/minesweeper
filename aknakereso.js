@@ -1,47 +1,71 @@
 $('document').ready(function(){
 
-    function makeField(){
-        var field = new Array(10);
+    var columns=0;
+    var bombs=0;
+    
+    if(!$('#field').hasClass('first')){
+        var columns=10;
+        var bombs=10;
+        $('#field').addClass('first');
+    }else{
 
-        for(var i = 0; i <10;i++){
-            for(var j=0; j<10; j++){
-                field[j] = new Array(10);
+    }
+
+    $('#submit').click(function(){
+        columns = parseInt($('#columns').val());
+        bombs = parseInt($('#bombs').val());
+        field = makeField(columns, bombs);
+        
+    });
+
+    function makeField(columns, bombs){
+        $('#field').text('');
+        $('.flex').removeClass('green');
+        $('.flex').removeClass('red');
+        $('.message').remove();
+
+        var field = new Array(columns);
+        
+
+        for(var i = 0; i < columns ;i++){
+            for(var j=0; j< columns ; j++){
+                field[j] = new Array(columns);
             }
         }
-        for(var i = 0; i < 10; i++){
-            for(var j = 0; j < 10; j++){
+        for(var i = 0; i < columns; i++){
+            for(var j = 0; j < columns; j++){
                 field[i][j] = false;
             }
         }
 
         var counter = 0;
         do{
-            var first = Math.floor(Math.random() * 10);
-            var second = Math.floor(Math.random() * 10);
+            var first = Math.floor(Math.random() * columns);
+            var second = Math.floor(Math.random() * columns);
             if(field[first][second]==false){
                 field[first][second] = true;
                 counter++;
             }
-        }while(counter!=10);
+        }while(counter!=bombs);
 
 
 
-        for(var i = 0; i <10;i++){
+        for(var i = 0; i < columns; i++){
             $('#field').append('<tr>');
-            for(var j=0; j<10; j++){
-                $('#field tr:last').append('<td><img src="images/button.png" class="click imgH" id="' + i + j + '"></td>');
+            for(var j=0; j< columns; j++){
+                $('#field tr:last').append('<td><img src="images/button.png" class="click imgH" id="' + i + '-' + j + '"></td>');
             }
         }
 
         return field;
     }
 
-    function korbe(first, second, field){
+    function korbe(first, second, field, columns){
         var counter=0;
-        
 
         //teljes
-        if(first>0 && second < 9 && second > 0 && first < 9){
+        if(first>0 && second < columns && second > 0 && first < columns){
+            
             if(field[first+1][second-1] == true){
                 counter++;
             }
@@ -81,7 +105,7 @@ $('document').ready(function(){
         }
 
         //jobbfelsősarok
-        if(second == 9 && first == 0){
+        if(second == columns && first == 0){
             if(field[first+1][second-1] == true){
                 counter++;
             }
@@ -94,7 +118,7 @@ $('document').ready(function(){
         }
 
         //jobbalsósarok
-        if(second == 9 && first == 9){
+        if(second == columns && first == columns){
             if(field[first-1][second] == true){
                 counter++;
             }
@@ -107,7 +131,7 @@ $('document').ready(function(){
         }
 
         //balalsósarok
-        if(second == 0 && first == 9){
+        if(second == 0 && first == columns){
             if(field[first][second+1] == true){
                 counter++;
             }
@@ -121,7 +145,7 @@ $('document').ready(function(){
 
 
         //balközép
-        if(second == 0 && first < 9 && first > 0 ){
+        if(second == 0 && first < columns && first > 0 ){
             if(field[first+1][second] == true){
                 counter++;
             }
@@ -140,7 +164,7 @@ $('document').ready(function(){
         }
 
         //felsőközép
-        if(first == 0 && second > 0 && second < 9){
+        if(first == 0 && second > 0 && second < columns){
             if(field[first+1][second-1] == true){
                 counter++;
             }
@@ -159,7 +183,7 @@ $('document').ready(function(){
         }
 
         //jobbközép
-        if(second == 9 && first >0 && first < 9){
+        if(second == columns && first >0 && first < columns){
             if(field[first+1][second-1] == true){
                 counter++;
             }
@@ -178,7 +202,7 @@ $('document').ready(function(){
         }
 
         //alsóközép
-        if(first == 9 && second < 9 && second > 0){
+        if(first == columns && second < columns && second > 0){
             if(field[first][second+1] == true){
                 counter++;
             }
@@ -196,73 +220,72 @@ $('document').ready(function(){
             }
         }
 
-        if(counter==0 && (!$('#' + first + second).hasClass('checked'))){
-            $('#' + first + second).attr("src", "images/0.png");
-            $('#' + first + second).addClass('checked');
+        if(counter==0 && (!$('#' + first + '-' + second).hasClass('checked'))){
+            $('#' + first + '-' + second).attr("src", "images/0.png");
+            $('#' + first + '-' + second).addClass('checked');
             
-            if(first+1 <= 9 && second-1 >= 0){
-                korbe(first+1, second-1, field);
+            if(first+1 <= columns && second-1 >= 0){
+                korbe(first+1, second-1, field, columns);
             }
-            if(first + 1 <= 9){
-                korbe(first+1, second, field);
+            if(first + 1 <= columns){
+                korbe(first+1, second, field, columns);
             }
-            if(first+1 <= 9 && second+1 <= 9){
-                korbe(first+1, second+1, field);
+            if(first+1 <= columns && second+1 <= columns){
+                korbe(first+1, second+1, field, columns);
             }
-            if(second+1 <=9){
-                korbe(first, second+1, field);
+            if(second+1 <=columns){
+                korbe(first, second+1, field, columns);
             }
-            if(first-1 >=0 && second+1 <= 9){
-                korbe(first-1, second+1, field);
+            if(first-1 >=0 && second+1 <= columns){
+                korbe(first-1, second+1, field, columns);
             }
             if(first-1 >=0){
-                korbe(first-1, second, field);
+                korbe(first-1, second, field, columns);
             }
             if(first-1 >=0 && second-1 >= 0){
-                korbe(first-1, second-1, field);
+                korbe(first-1, second-1, field, columns);
             }
             if(second-1 >= 0){
-                korbe(first, second-1, field);
+                korbe(first, second-1, field, columns);
             }
             
 
         }else{
-            $('#' + first + second).attr("src", "images/" + counter + ".png");
-            $('#' + first + second).addClass('checked');
+            $('#' + first + '-' + second).attr("src", "images/" + counter + ".png");
+            $('#' + first + '-' + second).addClass('checked');
             return(counter);
         }
 
     }
 
-
-
-
+    
     $('table').on('click', '.click', function(){
+        
         var id = $(this).attr('id');
-        id = id.split('');
+        id = id.split('-');
         for(var i = 0; i< id.length; i++){
             id[i] = parseInt(id[i]);
         }
-
         if(($(this).attr("src") != "images/flag.jpg")){
             if(field[id[0]][id[1]] == true){
                 $(this).attr("src", "images/akna.jpg");
-                $('table').off();
                 $('.flex').addClass('red');
                 $('.click').removeClass('imgH');
                 $('.click').addClass('imgNot');
+                $('img').removeClass('click');
 
-                for(var i = 0; i < 10; i++){
-                    for(var j = 0; j < 10; j++){
+                for(var i = 0; i < columns; i++){
+                    for(var j = 0; j < columns; j++){
                         if(field[i][j]){
-                            $('#' + i + j).attr("src", "images/akna.jpg");
+                            $('#' + i + '-' + j).attr("src", "images/akna.jpg");
                         }
                     }
                 }
 
 
             }else{
-                korbe(id[0], id[1], field);
+                
+                korbe(id[0], id[1], field, (columns - 1));
             }
         }
 
@@ -274,13 +297,13 @@ $('document').ready(function(){
             }
         })
 
-        if(counter == 10){
+        if(counter == bombs){
             $('.flex').addClass('green');
             $('.sign').after('<div class="message"></div>');
             $('.message').append('Ön nyert!');
-            $('table').off();
             $('.click').removeClass('imgH');
             $('.click').addClass('imgNot');
+            $('img').removeClass('click');
         }
 
     
@@ -302,9 +325,12 @@ $('document').ready(function(){
     });
    
     $('.head').click(function(){
-        location.reload();
+        //location.reload();
+        field = makeField(columns, bombs);
     })
     
     
-    field = makeField();
+    field = makeField(columns, bombs);
+    //$('#0-0').attr("src", "images/akna.jpg");
+    
 })
